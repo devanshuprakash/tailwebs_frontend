@@ -108,14 +108,10 @@ const TeacherDashboard = () => {
                  <h3 className="text-lg leading-6 font-medium text-gray-900">Advanced Analytics</h3>
               </div>
               <div className="p-6">
-                <div className="grid grid-cols-1 gap-5 sm:grid-cols-3 mb-8">
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 mb-8">
                    <div className="bg-indigo-50 rounded-lg p-4 border border-indigo-100">
                      <p className="text-sm text-indigo-700 font-medium">Global Submission Rate</p>
                      <p className="text-2xl font-bold text-indigo-900 mt-1">{stats.analytics.submissionRate}%</p>
-                   </div>
-                   <div className="bg-emerald-50 rounded-lg p-4 border border-emerald-100">
-                     <p className="text-sm text-emerald-700 font-medium">Avg Completion Time</p>
-                     <p className="text-2xl font-bold text-emerald-900 mt-1">{stats.analytics.avgCompletionHours} hrs</p>
                    </div>
                    <div className="bg-red-50 rounded-lg p-4 border border-red-100">
                      <p className="text-sm text-red-700 font-medium">Late Submissions</p>

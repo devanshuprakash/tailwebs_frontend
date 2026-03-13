@@ -166,14 +166,19 @@ const StudentDashboard = () => {
                         <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800 border border-red-200">
                           Missed Deadline
                         </span>
-                      ) : (
-                        <button
-                          onClick={() => handleOpenSubmit(assignment)}
-                          className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
-                        >
-                          Submit Answer
-                        </button>
-                      )}
+                      ) : null}
+                      <a
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (!assignment.my_submission) handleOpenSubmit(assignment);
+                        }}
+                        className={`mt-4 w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
+                          assignment.my_submission ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-primary-600 hover:bg-primary-700'
+                        }`}
+                      >
+                        {assignment.my_submission ? 'View Submission' : 'Submit Answer'}
+                      </a>
                     </div>
                   </div>
                   
@@ -262,7 +267,7 @@ const StudentDashboard = () => {
           <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" onClick={() => setSelectedAssignment(null)}></div>
             <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full sm:p-6">
+            <div className="relative z-10 inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full sm:p-6">
               <div>
                 <div className="mt-3 text-center sm:mt-0 sm:text-left">
                   <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">
@@ -271,6 +276,22 @@ const StudentDashboard = () => {
                   <div className="mt-2 text-sm text-gray-500 mb-4 whitespace-pre-wrap">
                     {selectedAssignment.description}
                   </div>
+                  {new Date() > new Date(selectedAssignment.due_date) && (
+                    <div className="mb-4 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md">
+                      <div className="flex">
+                        <div className="flex-shrink-0">
+                          <svg className="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <div className="ml-3">
+                          <p className="text-sm text-yellow-700">
+                            <strong>Warning:</strong> This assignment is past its due date. Your submission will be marked as late.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                   <form onSubmit={handleSubmitAnswer}>
                     <div>
                       <label htmlFor="answer" className="sr-only">Your Answer</label>
@@ -278,7 +299,6 @@ const StudentDashboard = () => {
                         id="answer"
                         name="answer"
                         rows={8}
-                        required
                         value={answer}
                         onChange={(e) => setAnswer(e.target.value)}
                         className="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md border p-3 font-serif"
@@ -292,7 +312,6 @@ const StudentDashboard = () => {
                         type="file"
                         id="file"
                         onChange={(e) => setFile(e.target.files[0])}
-                        accept=".pdf,.doc,.docx,.zip"
                         className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100"
                       />
                     </div>

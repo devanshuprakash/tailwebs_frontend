@@ -16,43 +16,44 @@ const AssignmentForm = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    const fetchAssignment = async () => {
+      try {
+        const res = await api.get(`/assignments/${id}`);
+        const assignment = res.data;
+        if (assignment) {
+          setFormData({
+            title: assignment.title,
+            description: assignment.description,
+            due_date: new Date(assignment.due_date).toISOString().slice(0, 16)
+          });
+        } else {
+          setError('Assignment not found.');
+        }
+      } catch (err) {
+        console.error(err);
+        setError('Failed to fetch assignment details.');
+      }
+    };
+
     if (isEdit) {
       fetchAssignment();
     }
-  }, [id]);
-
-  const fetchAssignment = async () => {
-    try {
-      const res = await api.get('/assignments?status=draft');
-      const assignment = res.data.assignments.find(a => a.id === id);
-      if (assignment) {
-        setFormData({
-          title: assignment.title,
-          description: assignment.description,
-          due_date: new Date(assignment.due_date).toISOString().slice(0, 16)
-        });
-      } else {
-        setError('Assignment not found or not in draft status.');
-      }
-    } catch (err) {
-      setError('Failed to fetch assignment details.');
-    }
-  };
+  }, [id, isEdit]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (actionStatus) => {
     setLoading(true);
     setError('');
 
     try {
+      const payload = { ...formData, status: actionStatus };
       if (isEdit) {
-        await api.put(`/assignments/${id}`, formData);
+        await api.put(`/assignments/${id}`, payload);
       } else {
-        await api.post('/assignments', formData);
+        await api.post('/assignments', payload);
       }
       navigate('/teacher');
     } catch (err) {
@@ -136,11 +137,20 @@ const AssignmentForm = () => {
               Cancel
             </Link>
             <button
-              type="submit"
+              type="button"
+              onClick={() => handleSubmit('draft')}
+              disabled={loading}
+              className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors disabled:opacity-50 mr-3"
+            >
+              {loading ? 'Saving...' : 'Save as Draft'}
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSubmit('published')}
               disabled={loading}
               className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors disabled:opacity-50"
             >
-              {loading ? 'Saving...' : 'Save as Draft'}
+              {loading ? 'Saving...' : 'Publish'}
             </button>
           </div>
         </form>
