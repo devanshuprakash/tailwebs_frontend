@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
-import api from '../../api/axios';
+import api, { API_BASE_URL } from '../../api/axios';
 
 const StudentDashboard = () => {
   const [assignments, setAssignments] = useState([]);
@@ -193,7 +193,7 @@ const StudentDashboard = () => {
                       )}
                       {assignment.my_submission.fileUrl && (
                         <a 
-                          href={`http://localhost:5001${assignment.my_submission.fileUrl}`} 
+                          href={`${API_BASE_URL}${assignment.my_submission.fileUrl}`} 
                           target="_blank" 
                           rel="noopener noreferrer"
                           className="inline-flex items-center text-sm font-medium text-emerald-700 hover:text-emerald-900 underline"

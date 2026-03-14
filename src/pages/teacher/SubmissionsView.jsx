@@ -117,7 +117,7 @@ const SubmissionsView = () => {
                   )}
                   {sub.fileUrl && (
                     <a 
-                      href={`http://localhost:5001${sub.fileUrl}`} 
+                      href={`${API_BASE_URL}${sub.fileUrl}`} 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="inline-flex items-center mt-2 px-3 py-1.5 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
